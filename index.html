@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sound Artz | Hands Up / Dancecore Remixer</title>
+<meta name="description" content="Sound Artz — Hands Up / Dancecore系リミキサー・トラックメーカー。ハンズアップ一本で16年。TechnoBase.FM・maimaiへの楽曲提供実績あり。自作VST3プラグインも公開中。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#050907;
+    --bg-1:#081410;
+    --bg-2:#0c1c17;
+    --pink:#ff2f8f;
+    --cyan:#29f1e0;
+    --purple:#b84dff;
+    --ink:#eafff8;
+    --ink-dim:#9fc4bc;
+    --ink-faint:#5d8078;
+    --card:rgba(255,255,255,0.035);
+    --card-border:rgba(255,255,255,0.10);
+    --display:'Rajdhani', sans-serif;
+    --sans:'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg-0);
+    color:var(--ink);
+    font-family:var(--sans);
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  /* ---------- Ambient background: scanlines + grid + glow ---------- */
+  .bg-fixed{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 55% 40% at 12% 6%, rgba(255,47,143,0.22), transparent 60%),
+      radial-gradient(ellipse 60% 45% at 88% 14%, rgba(41,241,224,0.16), transparent 60%),
+      radial-gradient(ellipse 70% 55% at 50% 105%, rgba(184,77,255,0.14), transparent 60%),
+      linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 45%, var(--bg-2) 100%);
+  }
+  .bg-fixed::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.028) 0px, rgba(255,255,255,0.028) 1px, transparent 1px, transparent 3px);
+    opacity:0.5;
+  }
+  .bg-fixed::after{
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(41,241,224,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(41,241,224,0.05) 1px, transparent 1px);
+    background-size:48px 48px;
+    mask-image:radial-gradient(ellipse 70% 60% at 50% 0%, black, transparent 75%);
+  }
+
+  .content{position:relative; z-index:1;}
+  ::selection{background:rgba(255,47,143,0.4); color:#fff;}
+  a{color:inherit; text-decoration:none;}
+
+  .reveal{opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  section{max-width:1040px; margin:0 auto; padding:100px 28px;}
+  .eyebrow{
+    display:flex; align-items:center; gap:14px;
+    font-family:var(--display); font-weight:700;
+    font-size:14px; letter-spacing:0.32em; text-transform:uppercase;
+    color:var(--pink); margin-bottom:16px;
+  }
+  .eyebrow::before{content:""; width:28px; height:2px; background:linear-gradient(90deg, var(--pink), transparent);}
+  .section-title{
+    font-family:var(--display); font-weight:700; text-transform:uppercase;
+    font-size:clamp(34px,5vw,54px); line-height:1.05; margin-bottom:14px; letter-spacing:0.01em;
+    background:linear-gradient(120deg, #fff 15%, var(--cyan) 60%, var(--pink) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 0 18px rgba(41,241,224,0.18));
+  }
+  .section-sub{color:var(--ink-dim); font-size:15px; line-height:1.9; max-width:600px;}
+
+  /* ---------- Nav ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 32px;
+    background:rgba(5,9,7,0.9);
+    border-bottom:1px solid rgba(255,47,143,0.15);
+  }
+  .nav-brand{display:flex; align-items:center; gap:11px; font-family:var(--display); font-weight:700; font-size:18px; letter-spacing:.04em; text-transform:uppercase;}
+  .nav-brand img{width:30px; height:30px; border-radius:6px; object-fit:cover; box-shadow:0 0 12px rgba(255,47,143,.55); border:1px solid rgba(255,255,255,.18);}
+  .nav-links{display:flex; gap:30px; font-family:var(--display); font-weight:600; font-size:14px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-dim);}
+  .nav-links a{transition:color .25s ease;}
+  .nav-links a:hover{color:var(--cyan);}
+  @media (max-width:640px){ .nav-links{display:none;} }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    min-height:100svh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:140px 24px 80px; position:relative;
+  }
+  .hero-ring{position:relative; width:180px; height:180px; margin-bottom:30px;}
+  .hero-ring::before{
+    content:""; position:absolute; inset:-3px;
+    background:conic-gradient(from 0deg, var(--pink), var(--cyan), var(--purple), var(--pink));
+    border-radius:20px; animation:spin 8s linear infinite; filter:blur(0.5px);
+  }
+  @keyframes spin{ to{transform:rotate(360deg);} }
+  .hero-ring::after{content:""; position:absolute; inset:-3px; border-radius:20px; box-shadow:0 0 50px 4px rgba(255,47,143,.4);}
+  .hero-ring img{
+    position:relative; width:174px; height:174px; border-radius:18px; object-fit:cover;
+    border:3px solid var(--bg-0); z-index:2; display:block; margin:3px;
+  }
+  .hero-kicker{font-family:var(--display); font-weight:600; color:var(--cyan); font-size:15px; letter-spacing:.35em; text-transform:uppercase; margin-bottom:14px;}
+  .hero h1{
+    font-family:var(--display); font-weight:700; text-transform:uppercase;
+    font-size:clamp(52px,11vw,104px); letter-spacing:0.01em; line-height:0.95;
+    background:linear-gradient(120deg,#ffffff 10%, var(--cyan) 50%, var(--pink) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 0 40px rgba(255,47,143,.3));
+  }
+  .hero-tagline{margin-top:22px; font-size:clamp(15px,2vw,18px); color:var(--ink-dim); max-width:540px; line-height:1.85;}
+  .hero-tagline .en{display:block; margin-top:10px; font-family:var(--display); font-weight:600; letter-spacing:.04em; color:var(--ink-faint); font-size:14px; text-transform:uppercase;}
+  .hero-cta{margin-top:40px; display:flex; gap:14px; flex-wrap:wrap; justify-content:center;}
+
+  .btn{
+    display:inline-flex; align-items:center; gap:9px;
+    padding:14px 30px;
+    font-family:var(--display); font-weight:700; font-size:15px; letter-spacing:.06em; text-transform:uppercase;
+    clip-path:polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+    transition:transform .25s cubic-bezier(.2,.9,.3,1.2), box-shadow .25s ease;
+    position:relative; border:1px solid transparent;
+  }
+  .btn-primary{background:none; color:#05100c;}
+  .btn-primary::before{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(100deg, var(--pink), var(--cyan) 100%);
+    clip-path:inherit; z-index:-1;
+  }
+  .btn-primary{box-shadow:0 8px 26px rgba(255,47,143,.35);}
+  .btn-primary:hover{transform:translateY(-3px); box-shadow:0 14px 32px rgba(255,47,143,.5);}
+  .btn-ghost{background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.18); color:var(--ink);}
+  .btn-ghost:hover{transform:translateY(-3px); border-color:var(--cyan); box-shadow:0 10px 24px rgba(41,241,224,.18);}
+  .scroll-cue{
+    position:absolute; bottom:34px; left:50%; transform:translateX(-50%);
+    font-family:var(--display); font-weight:600; font-size:12px; letter-spacing:.35em; color:var(--ink-faint);
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+    animation:bob 2.2s ease-in-out infinite;
+  }
+  .scroll-cue .line{width:1px; height:32px; background:linear-gradient(180deg, var(--pink), transparent);}
+  @keyframes bob{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,8px);}}
+
+  /* ---------- About ---------- */
+  .about-grid{display:grid; grid-template-columns:0.85fr 1.3fr; gap:52px; align-items:center; margin-top:44px;}
+  @media (max-width:760px){ .about-grid{grid-template-columns:1fr;} }
+  .about-visual{
+    position:relative; border-radius:4px; overflow:hidden; aspect-ratio:1/1;
+    background:linear-gradient(160deg, rgba(255,47,143,.18), rgba(41,241,224,.08));
+    border:1px solid var(--card-border);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .about-visual img{width:78%; height:78%; object-fit:cover; border-radius:4px; box-shadow:0 0 40px rgba(255,47,143,.3);}
+  .about-visual .tag{
+    position:absolute; left:16px; bottom:16px;
+    background:rgba(5,9,7,0.7); border:1px solid rgba(255,255,255,.14);
+    padding:7px 14px; font-family:var(--display); font-weight:600; font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
+  }
+  .about-body p{color:var(--ink-dim); line-height:2.05; font-size:15.5px; margin-bottom:18px;}
+  .about-body strong{color:var(--ink); font-weight:700;}
+  .stat-row{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:28px;}
+  .stat{padding:16px; background:var(--card); border:1px solid var(--card-border); text-align:center;}
+  .stat b{display:block; font-family:var(--display); font-weight:700; font-size:24px; color:var(--cyan);}
+  .stat span{font-size:11.5px; color:var(--ink-faint); letter-spacing:.04em;}
+
+  /* ---------- Links ---------- */
+  .link-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:16px; margin-top:36px;}
+  .link-card{
+    position:relative; padding:24px 22px;
+    background:var(--card); border:1px solid var(--card-border);
+    overflow:hidden; transition:transform .3s cubic-bezier(.2,.9,.3,1.1), border-color .3s ease;
+    clip-path:polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  }
+  .link-card::before{
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(220px 120px at 0% 0%, var(--glow,rgba(255,47,143,.2)), transparent 70%);
+    opacity:0; transition:opacity .35s ease;
+  }
+  .link-card:hover{transform:translateY(-6px); border-color:rgba(255,255,255,.24);}
+  .link-card:hover::before{opacity:1;}
+  .link-icon{
+    width:44px; height:44px; display:flex; align-items:center; justify-content:center; margin-bottom:16px;
+    background:linear-gradient(135deg, var(--i1), var(--i2));
+    clip-path:polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%);
+    box-shadow:0 8px 20px -6px var(--i1);
+  }
+  .link-icon svg{width:22px; height:22px; fill:#05100c;}
+  .link-card h3{font-family:var(--display); font-weight:700; font-size:17px; text-transform:uppercase; letter-spacing:.03em; margin-bottom:6px; display:flex; align-items:center; gap:8px;}
+  .link-card span.arrow{opacity:0; transform:translateX(-4px); transition:all .3s ease; color:var(--cyan);}
+  .link-card:hover span.arrow{opacity:1; transform:translateX(0);}
+  .link-card p{font-size:12.5px; color:var(--ink-faint); line-height:1.6;}
+
+  /* ---------- Tracks (SoundCloud embed) ---------- */
+  .sc-frame{
+    margin-top:36px; border:1px solid var(--card-border); background:var(--card);
+    padding:6px;
+  }
+  .sc-frame iframe{width:100%; height:480px; display:block; border:0;}
+
+  /* ---------- Featured YouTube video ---------- */
+  .yt-feature{margin-top:22px; border:1px solid var(--card-border); background:var(--card); padding:6px;}
+  .yt-feature-label{
+    font-family:var(--display); font-weight:700; font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--pink); padding:10px 12px 4px;
+  }
+  .yt-frame{position:relative; width:100%; aspect-ratio:16/9; overflow:hidden;}
+  .yt-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .yt-feature-caption{padding:10px 12px 6px; font-size:12.5px; color:var(--ink-faint);}
+
+  /* ---------- Plugins ---------- */
+  .plugin-list{display:flex; flex-direction:column; gap:20px; margin-top:36px;}
+  .plugin-card{
+    display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:24px;
+    padding:26px 28px; background:var(--card); border:1px solid var(--card-border);
+    clip-path:polygon(0 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%);
+  }
+  @media (max-width:640px){ .plugin-card{grid-template-columns:1fr; text-align:left;} }
+  .plugin-glyph{
+    width:64px; height:64px; flex:0 0 auto;
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg, var(--g1), var(--g2));
+    clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%);
+    font-family:var(--display); font-weight:700; font-size:22px; color:#05100c;
+  }
+  .plugin-info h3{font-family:var(--display); font-weight:700; font-size:22px; text-transform:uppercase; letter-spacing:.02em; margin-bottom:6px;}
+  .plugin-info p{color:var(--ink-dim); font-size:13.5px; line-height:1.75; max-width:520px;}
+  .plugin-tags{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
+  .plugin-tags span{
+    font-family:var(--display); font-weight:600; font-size:11px; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--ink-faint); border:1px solid var(--card-border); padding:3px 10px;
+  }
+  .plugin-status{font-family:var(--display); font-weight:700; font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap;}
+  .status-live{color:var(--cyan);}
+  .status-soon{color:var(--ink-faint);}
+
+  /* ---------- Footer ---------- */
+  footer{text-align:center; padding:60px 24px 90px; color:var(--ink-faint); font-size:12.5px; letter-spacing:.04em;}
+  footer .foot-tag{font-family:var(--display); font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-dim); font-size:14px; margin-bottom:14px;}
+  footer .foot-links{display:flex; gap:22px; justify-content:center; margin-top:18px; flex-wrap:wrap; font-family:var(--display); font-weight:600; letter-spacing:.06em; text-transform:uppercase; font-size:12.5px;}
+  footer .foot-links a{color:var(--ink-faint); transition:color .25s ease;}
+  footer .foot-links a:hover{color:var(--pink);}
+</style>
+</head>
+<body>
+
+<div class="bg-fixed"></div>
+
+<nav>
+  <div class="nav-brand"><img src="assets/icon.jpg" alt="Sound Artz icon">Sound Artz</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#links">Links</a>
+    <a href="#tracks">Tracks</a>
+    <a href="#plugins">Plugins</a>
+  </div>
+</nav>
+
+<div class="content">
+
+  <header class="hero">
+    <div class="hero-ring"><img src="assets/icon.jpg" alt="Sound Artz avatar"></div>
+    <div class="hero-kicker reveal in">Hands Up / Dancecore</div>
+    <h1 class="reveal in">Sound Artz</h1>
+    <p class="hero-tagline reveal in">
+      原曲の熱を保ったまま、自分の色に染め上げる。<br>
+      2010年から鳴らし続けているリミキサー・トラックメーカー。
+      <span class="en">Bootleg remixes, originals & self-built VST3 tools.</span>
+    </p>
+    <div class="hero-cta reveal in">
+      <a class="btn btn-primary" href="https://soundcloud.com/soundartz" target="_blank" rel="noopener">SoundCloudで聴く</a>
+      <a class="btn btn-ghost" href="#tracks">トラックを見る</a>
+    </div>
+    <div class="scroll-cue"><div class="line"></div>SCROLL</div>
+  </header>
+
+  <section id="about">
+    <div class="eyebrow reveal">About</div>
+    <h2 class="section-title reveal">Profile</h2>
+    <p class="section-sub reveal">ブートレグ・リミックスを主戦場に、オリジナル制作と自作エフェクター開発もやっています。</p>
+
+    <div class="about-grid">
+      <div class="about-visual reveal">
+        <img src="assets/icon.jpg" alt="Sound Artz portrait">
+        <div class="tag">Sound Artz</div>
+      </div>
+      <div class="about-body reveal">
+        <p>2010年から活動している、<strong>Hands Up / Dancecore</strong>系のリミキサー・トラックメーカー。ハンズアップ一本で16年作り続けている変人です。本場ドイツの<strong>TechnoBase.FM</strong>のコンピレーションに楽曲提供、SEGAの音楽ゲーム<strong>maimai</strong>にも楽曲提供実績があります。</p>
+        <p>最近はFL Studio用のエフェクトVST3プラグインも自作していて、鳴らす側だけでなく作る側からも音作りを追求中。<strong>EnvFilter</strong>・<strong>BitCrush</strong>・<strong>MultiFX</strong>という3つの自作エフェクターをGitHubで無料公開しています。</p>
+        <div class="stat-row">
+          <div class="stat"><b>2010–</b><span>ACTIVE SINCE</span></div>
+          <div class="stat"><b>16</b><span>YEARS OF HANDS UP</span></div>
+          <div class="stat"><b>3</b><span>SELF-BUILT VST3</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="links">
+    <div class="eyebrow reveal">Links</div>
+    <h2 class="section-title reveal">Find Sound Artz</h2>
+    <p class="section-sub reveal">楽曲・映像・ツールはそれぞれのプラットフォームで公開しています。</p>
+
+    <div class="link-grid">
+      <a class="link-card reveal" href="https://soundcloud.com/soundartz" target="_blank" rel="noopener" style="--i1:#ff2f8f; --i2:#ff7fc2; --glow:rgba(255,47,143,.25);">
+        <div class="link-icon"><svg viewBox="0 0 24 24"><path d="M3 12h1v5H3zM5 10h1v7H5zM7 9h1v8H7zM9 8h1v9H9zM11 11a4 4 0 018 0v6h-8z"/></svg></div>
+        <h3>SoundCloud <span class="arrow">→</span></h3>
+        <p>リミックス・オリジナル楽曲を配信</p>
+      </a>
+      <a class="link-card reveal" href="https://www.youtube.com/@Soundartz1" target="_blank" rel="noopener" style="--i1:#ff2f8f; --i2:#b84dff; --glow:rgba(184,77,255,.22);">
+        <div class="link-icon"><svg viewBox="0 0 24 24"><path d="M21 7s-.2-1.4-.8-2c-.8-.8-1.7-.8-2.1-.9C15.4 4 12 4 12 4s-3.4 0-6.1.1c-.4.1-1.3.1-2.1.9C3.2 5.6 3 7 3 7S2.8 8.6 2.8 10.2v1.6C2.8 13.4 3 15 3 15s.2 1.4.8 2c.8.8 1.9.8 2.3.9 1.7.1 7.9.1 7.9.1s3.4 0 6.1-.1c.4-.1 1.3-.1 2.1-.9.6-.6.8-2 .8-2s.2-1.6.2-3.2v-1.6C21.2 8.6 21 7 21 7zM10 14.2V8.8l5.2 2.7z"/></svg></div>
+        <h3>YouTube <span class="arrow">→</span></h3>
+        <p>リミックス動画・DL版アップロード</p>
+      </a>
+      <a class="link-card reveal" href="https://x.com/ixis_soundartz" target="_blank" rel="noopener" style="--i1:#29f1e0; --i2:#ff2f8f; --glow:rgba(41,241,224,.22);">
+        <div class="link-icon"><svg viewBox="0 0 24 24"><path d="M3 3l7.5 9.5L3.5 21H6l6-7 5 7h4l-8-10.2L20.5 3H18l-5.3 6.2L8 3z"/></svg></div>
+        <h3>X (Twitter) <span class="arrow">→</span></h3>
+        <p>制作の裏側・新曲情報</p>
+      </a>
+      <a class="link-card reveal" href="https://github.com/soundartzix-netizen" target="_blank" rel="noopener" style="--i1:#b84dff; --i2:#29f1e0; --glow:rgba(184,77,255,.22);">
+        <div class="link-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.1-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.6-.1-.3-.4-1.3.1-2.6 0 0 .8-.3 2.8 1a9.4 9.4 0 015 0c1.9-1.3 2.8-1 2.8-1 .5 1.3.2 2.3.1 2.6.6.7 1 1.6 1 2.6 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0012 2z"/></svg></div>
+        <h3>GitHub <span class="arrow">→</span></h3>
+        <p>自作VST3プラグインを無料配布</p>
+      </a>
+    </div>
+
+    <div class="yt-feature reveal">
+      <div class="yt-feature-label">Featured · maimai提供曲</div>
+      <div class="yt-frame">
+        <iframe src="https://www.youtube.com/embed/f_wtQOPRlZA"
+          title="【maimaiでらっくす】Sound Artz - Party☆People☆Princess"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen></iframe>
+      </div>
+      <p class="yt-feature-caption">【maimaiでらっくす】Sound Artz - Party☆People☆Princess</p>
+    </div>
+  </section>
+
+  <section id="tracks">
+    <div class="eyebrow reveal">Tracks</div>
+    <h2 class="section-title reveal">Latest Releases</h2>
+    <p class="section-sub reveal">SoundCloudの最新トラックをそのまま表示しています(自動更新)。</p>
+    <div class="sc-frame reveal">
+      <iframe scrolling="no" frameborder="no" allow="autoplay"
+        src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/soundartz&color=%23ff2f8f&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&visual=false"></iframe>
+    </div>
+  </section>
+
+  <section id="plugins">
+    <div class="eyebrow reveal">Plugins</div>
+    <h2 class="section-title reveal">Self-Built VST3</h2>
+    <p class="section-sub reveal">FL Studio用に自作しているエフェクトプラグイン群。無料でソースごと公開しています。</p>
+
+    <div class="plugin-list">
+      <div class="plugin-card reveal">
+        <div class="plugin-glyph" style="--g1:#29f1e0; --g2:#ff2f8f;">EF</div>
+        <div class="plugin-info">
+          <h3>EnvFilter</h3>
+          <p>音の立ち上がりやMIDIノートでフィルターADSRを発火するエンベロープ式LP/HP/BPフィルター。</p>
+          <div class="plugin-tags"><span>Envelope Filter</span><span>Free</span><span>AGPLv3</span></div>
+        </div>
+        <a class="plugin-status status-live" href="https://github.com/soundartzix-netizen/EnvFilter" target="_blank" rel="noopener">GitHubで見る →</a>
+      </div>
+
+      <div class="plugin-card reveal">
+        <div class="plugin-glyph" style="--g1:#ff2f8f; --g2:#b84dff;">BC</div>
+        <div class="plugin-info">
+          <h3>BitCrush</h3>
+          <p>ビット数/サンプルレート低下・ディザ・ドライブ&トーンを備えたビットクラッシャー。Raw/Clean/Warmの質感切替つき。</p>
+          <div class="plugin-tags"><span>Bitcrusher</span><span>Free</span></div>
+        </div>
+        <span class="plugin-status status-soon">近日公開</span>
+      </div>
+
+      <div class="plugin-card reveal">
+        <div class="plugin-glyph" style="--g1:#b84dff; --g2:#29f1e0;">MF</div>
+        <div class="plugin-info">
+          <h3>MultiFX</h3>
+          <p>Filter / BitCrush / Distortion / Modulation / Trem-Gateをドラッグで並べ替えできるチェーン型マルチエフェクター。</p>
+          <div class="plugin-tags"><span>Multi-Effect</span><span>Free</span></div>
+        </div>
+        <span class="plugin-status status-soon">近日公開</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-tag">Bootleg remixes, originals &amp; self-built VST3 tools.</div>
+    © Sound Artz
+    <div class="foot-links">
+      <a href="https://soundcloud.com/soundartz" target="_blank" rel="noopener">SoundCloud</a>
+      <a href="https://www.youtube.com/@Soundartz1" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://x.com/ixis_soundartz" target="_blank" rel="noopener">X</a>
+      <a href="https://github.com/soundartzix-netizen" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
