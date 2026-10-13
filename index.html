@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sound Artz | Hands Up / Dancecore Remixer</title>
-<meta name="description" content="Sound Artz — Hands Up / Dancecore系リミキサー・トラックメーカー。ハンズアップ一本で16年。TechnoBase.FM・maimaiへの楽曲提供実績あり。自作VST3プラグインも公開中。">
+<meta name="description" content="Sound Artz — Hands Up / Dancecore系リミキサー・トラックメーカー。ハンズアップ一本で16年。TechnoBase.FM・maimaiへの楽曲提供実績あり。自作VST3プラグインやMV作成ツール「CoverPulse」も公開中。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -247,6 +247,7 @@
   .plugin-status{font-family:var(--display); font-weight:700; font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap;}
   .status-live{color:var(--cyan);}
   .status-soon{color:var(--ink-faint);}
+  .tool-glyph{object-fit:cover; background:none; padding:0;}
 
   /* ---------- Footer ---------- */
   footer{text-align:center; padding:60px 24px 90px; color:var(--ink-faint); font-size:12.5px; letter-spacing:.04em;}
@@ -267,6 +268,7 @@
     <a href="#links">Links</a>
     <a href="#tracks">Tracks</a>
     <a href="#plugins">Plugins</a>
+    <a href="#tools">Tools</a>
   </div>
 </nav>
 
@@ -300,11 +302,11 @@
       </div>
       <div class="about-body reveal">
         <p>2010年から活動している、<strong>Hands Up / Dancecore</strong>系のリミキサー・トラックメーカー。ハンズアップ一本で16年作り続けている変人です。本場ドイツの<strong>TechnoBase.FM</strong>のコンピレーションに楽曲提供、SEGAの音楽ゲーム<strong>maimai</strong>にも楽曲提供実績があります。</p>
-        <p>最近はFL Studio用のエフェクトVST3プラグインも自作していて、鳴らす側だけでなく作る側からも音作りを追求中。<strong>EnvFilter</strong>・<strong>BitCrush</strong>・<strong>MultiFX</strong>という3つの自作エフェクターをGitHubで無料公開しています。</p>
+        <p>最近はFL Studio用のエフェクトVST3プラグインも自作していて、鳴らす側だけでなく作る側からも音作りを追求中。第1弾の自作エフェクター<strong>EnvFilter</strong>をGitHubで無料公開中で、ほかのエフェクターも開発しています。</p>
         <div class="stat-row">
           <div class="stat"><b>2010–</b><span>ACTIVE SINCE</span></div>
           <div class="stat"><b>16</b><span>YEARS OF HANDS UP</span></div>
-          <div class="stat"><b>3</b><span>SELF-BUILT VST3</span></div>
+          <div class="stat"><b>1</b><span>FREE VST3 RELEASED</span></div>
         </div>
       </div>
     </div>
@@ -396,6 +398,24 @@
           <div class="plugin-tags"><span>Multi-Effect</span><span>Free</span></div>
         </div>
         <span class="plugin-status status-soon">近日公開</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="tools">
+    <div class="eyebrow reveal">Tools</div>
+    <h2 class="section-title reveal">Web Tools</h2>
+    <p class="section-sub reveal">ブラウザだけで動く自作ツール。インストール不要・無料で使えます。</p>
+
+    <div class="plugin-list">
+      <div class="plugin-card reveal">
+        <img class="plugin-glyph tool-glyph" src="assets/coverpulse.png" alt="CoverPulse アイコン">
+        <div class="plugin-info">
+          <h3>CoverPulse</h3>
+          <p>サムネ画像と曲を入れるだけで、音に合わせて動くMVを作れるツール。キックに反応する揺れ・フラッシュ、円形スペクトラムやネオンの波など、テンプレートを選ぶだけで1920×1080のMP4を書き出せます。画像・曲はブラウザの中だけで処理され、外部に送信されません。</p>
+          <div class="plugin-tags"><span>MV Maker</span><span>Browser</span><span>Free</span><span>PWA</span></div>
+        </div>
+        <a class="plugin-status status-live" href="https://soundartzix-netizen.github.io/coverpulse/" target="_blank" rel="noopener">Web版を開く →</a>
       </div>
     </div>
   </section>
