@@ -248,6 +248,9 @@
   .status-live{color:var(--cyan);}
   .status-soon{color:var(--ink-faint);}
   .tool-glyph{object-fit:cover; background:none; padding:0;}
+  .tool-links{display:flex; flex-direction:column; gap:12px; align-items:flex-end;}
+  .status-booth{color:var(--pink);}
+  @media (max-width:640px){ .tool-links{align-items:flex-start;} }
 
   /* ---------- Footer ---------- */
   footer{text-align:center; padding:60px 24px 90px; color:var(--ink-faint); font-size:12.5px; letter-spacing:.04em;}
@@ -338,6 +341,11 @@
         <h3>GitHub <span class="arrow">→</span></h3>
         <p>自作VST3プラグインを無料配布</p>
       </a>
+      <a class="link-card reveal" href="https://soundartz.booth.pm" target="_blank" rel="noopener" style="--i1:#29f1e0; --i2:#b84dff; --glow:rgba(41,241,224,.22);">
+        <div class="link-icon"><svg viewBox="0 0 24 24"><path d="M6 7V6a6 6 0 0112 0v1h3l-1.5 14h-15L3 7zm2 0h8V6a4 4 0 00-8 0zm-1 4a1 1 0 102 0 1 1 0 00-2 0zm8 0a1 1 0 102 0 1 1 0 00-2 0z"/></svg></div>
+        <h3>BOOTH <span class="arrow">→</span></h3>
+        <p>MV作成ツールなど自作ツールを配布</p>
+      </a>
     </div>
 
     <div class="yt-feature reveal">
@@ -415,7 +423,10 @@
           <p>サムネ画像と曲を入れるだけで、音に合わせて動くMVを作れるツール。キックに反応する揺れ・フラッシュ、円形スペクトラムやネオンの波など、テンプレートを選ぶだけで1920×1080のMP4を書き出せます。画像・曲はブラウザの中だけで処理され、外部に送信されません。</p>
           <div class="plugin-tags"><span>MV Maker</span><span>Browser</span><span>Free</span><span>PWA</span></div>
         </div>
-        <a class="plugin-status status-live" href="https://soundartzix-netizen.github.io/coverpulse/" target="_blank" rel="noopener">Web版を開く →</a>
+        <div class="tool-links">
+          <a class="plugin-status status-live" href="https://soundartzix-netizen.github.io/coverpulse/" target="_blank" rel="noopener">Web版を開く →</a>
+          <a class="plugin-status status-booth" href="https://soundartz.booth.pm/items/8989663" target="_blank" rel="noopener">BOOTHで入手 →</a>
+        </div>
       </div>
     </div>
   </section>
@@ -428,6 +439,7 @@
       <a href="https://www.youtube.com/@Soundartz1" target="_blank" rel="noopener">YouTube</a>
       <a href="https://x.com/ixis_soundartz" target="_blank" rel="noopener">X</a>
       <a href="https://github.com/soundartzix-netizen" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://soundartz.booth.pm" target="_blank" rel="noopener">BOOTH</a>
     </div>
   </footer>
 
