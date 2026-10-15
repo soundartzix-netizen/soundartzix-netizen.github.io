@@ -251,6 +251,17 @@
   .tool-links{display:flex; flex-direction:column; gap:12px; align-items:flex-end;}
   .status-booth{color:var(--pink);}
   .status-pack{color:var(--purple);}
+  .bgm-list{display:flex; flex-direction:column; gap:16px; margin-top:36px;}
+  .bgm-card{display:grid; grid-template-columns:1fr auto; gap:14px 24px; align-items:center; padding:22px 26px;
+    background:var(--card); border:1px solid var(--card-border);
+    clip-path:polygon(0 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%);}
+  .bgm-card h3{font-family:var(--display); font-weight:700; font-size:20px; letter-spacing:.02em;}
+  .bgm-card .meta{font-size:12.5px; color:var(--ink-faint); margin-top:4px;}
+  .bgm-card audio{grid-column:1 / -1; width:100%; height:40px;}
+  .bgm-terms{margin-top:22px; padding:18px 22px; border:1px solid var(--card-border); background:rgba(255,255,255,0.02);
+    color:var(--ink-dim); font-size:13px; line-height:1.9;}
+  .bgm-terms b{color:var(--ink);}
+  @media (max-width:640px){ .bgm-card{grid-template-columns:1fr;} }
   @media (max-width:640px){ .tool-links{align-items:flex-start;} }
 
   /* ---------- Footer ---------- */
@@ -274,6 +285,7 @@
     <a href="#plugins">Plugins</a>
     <a href="#tools">Tools</a>
     <a href="#samples">Samples</a>
+    <a href="#bgm">BGM</a>
   </div>
 </nav>
 
@@ -452,6 +464,32 @@
           <a class="plugin-status status-booth" href="https://github.com/soundartzix-netizen/voice-samples" target="_blank" rel="noopener">収録内容・利用規約 →</a>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section id="bgm">
+    <div class="eyebrow reveal">BGM</div>
+    <h2 class="section-title reveal">Free BGM</h2>
+    <p class="section-sub reveal">動画や配信の BGM に使える曲を無料で配布しています。試聴して、気に入ったらダウンロードしてください。</p>
+
+    <div class="bgm-list">
+      <div class="bgm-card reveal">
+        <div>
+          <h3>From you to me (Euro Dance Remix)</h3>
+          <div class="meta">Euro Dance ・ 2:32 ・ MP3</div>
+        </div>
+        <a class="plugin-status status-live" href="assets/bgm/from-you-to-me-euro-dance-remix.mp3"
+           download="Sound Artz - From you to me (Euro Dance Remix).mp3">無料ダウンロード（3.3MB） ↓</a>
+        <audio controls preload="none" src="assets/bgm/from-you-to-me-euro-dance-remix.mp3"></audio>
+      </div>
+    </div>
+
+    <div class="bgm-terms reveal">
+      <b>利用条件</b><br>
+      ・動画・配信・ゲームなどの BGM として自由に使えます（YouTube の収益化など商用利用も OK）<br>
+      ・カット・ループ・音量の調整などの編集も OK です<br>
+      ・クレジット表記は任意です（「BGM: Sound Artz」と書いていただけるとうれしいです）<br>
+      ・曲のファイルそのものの再配布・販売、自作と偽っての公開は禁止です
     </div>
   </section>
 
